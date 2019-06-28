@@ -101,7 +101,9 @@ class JWTAuth(BasicAuth):
         If the validation succeed, the claims are stored and accessible thru the
         get_authen_claims() method.
         """
-        resource_conf = config.DOMAIN[resource]
+        # in case or resource that is not defined in the config, it won't fail
+        # It will return an empty dict, this is the case for the schema_endpoint
+        resource_conf = config.DOMAIN.get(resource, {}) 
         audiences = resource_conf.get('audiences', config.JWT_AUDIENCES)
         return self._perform_verification(token, audiences, allowed_roles)
 
